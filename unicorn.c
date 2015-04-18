@@ -420,6 +420,10 @@ void unicorn_exit(int status){
 	ws2811_render(&ledstring);
 	ws2811_fini(&ledstring);
 	
+		  // Close NFC device
+	  nfc_close(pnd);
+	  // Release the context
+	  nfc_exit(context);
 	exit(status);
 }
 
