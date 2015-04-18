@@ -492,11 +492,12 @@ int main(int argc, char **argv) {
 			      printf("          ATS (ATR): ");
 			      print_hex(nt.nti.nai.abtAts, nt.nti.nai.szAtsLen);
 			    }
-			    loop_shader(5000);
+			    loop_shader(500);
 
-					for (i = 0; i < 64; i++){
-						setPixelColorRGB(i,0,0,0);
-					}
+				for (i = 0; i < 64; i++){
+					setPixelColorRGB(i,0,0,0);
+				}
+				ws2811_render(&ledstring);
 			  }
 
 
