@@ -385,8 +385,8 @@ void init_nfc() {
 
   // Display libnfc version
   const char *acLibnfcVersion = nfc_version();
-  (void)argc;
-  printf("%s uses libnfc %s\n", argv[0], acLibnfcVersion);
+  
+  printf(" uses libnfc %s\n",  acLibnfcVersion);
 
   // Open, using the first available NFC device which can be in order of selection:
   //   - default device specified using environment variable or
