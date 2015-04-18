@@ -492,7 +492,7 @@ int main(int argc, char **argv) {
 			      printf("          ATS (ATR): ");
 			      print_hex(nt.nti.nai.abtAts, nt.nti.nai.szAtsLen);
 			    }
-			    loop_shader(50);
+			    loop_shader(5000);
 
 					for (i = 0; i < 64; i++){
 						setPixelColorRGB(i,0,0,0);
