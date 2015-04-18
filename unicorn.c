@@ -512,12 +512,12 @@ int main(int argc, char **argv) {
 		}
 	
 	}
-
-	unicorn_exit(0);
 	  // Close NFC device
 	  nfc_close(pnd);
 	  // Release the context
 	  nfc_exit(context);
+	unicorn_exit(0);
+
 	  exit(EXIT_SUCCESS);
 	return 0;
 }
