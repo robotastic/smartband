@@ -155,7 +155,7 @@ void read_png_file(png_anim_t *anim, char* file_name)
 {
         char header[8];    // 8 is the maximum size that can be checked
 
-        strcpy(anim.file_name, file_name);
+        strcpy(anim->file_name, file_name);
         /* open file and test for it being a png */
         FILE *fp = fopen(file_name, "rb");
         if (!fp)
