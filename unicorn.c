@@ -532,7 +532,7 @@ read_png_file(anims[11], "anim/umbrella.png");
 			    print_hex(nt.nti.nai.abtUid, nt.nti.nai.szUidLen);
 			   
 			    
-			    for (i = 0; i < sizeof(tokens); i++) {
+			    for (i = 0; i < 6; i++) {
 			    	printf("       Card: ");
 			    	print_hex(tokens[i].id, tokens[i].id_len);
 			   		int min_len = 0;
