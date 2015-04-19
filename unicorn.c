@@ -151,7 +151,7 @@ int x, y;
 
 int anim_delay = 50;
 
-void read_png_file(png_anim_t anim, char* file_name)
+void read_png_file(png_anim_t *anim, char* file_name)
 {
         char header[8];    // 8 is the maximum size that can be checked
 
@@ -166,42 +166,42 @@ void read_png_file(png_anim_t anim, char* file_name)
 
 
         /* initialize stuff */
-        anim.png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+        anim->png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
-        if (!anim.png_ptr)
+        if (!anim->png_ptr)
                 abort_("[read_png_file] png_create_read_struct failed");
 
-        anim.info_ptr = png_create_info_struct(anim.png_ptr);
-        if (!anim.info_ptr)
+        anim->info_ptr = png_create_info_struct(anim->png_ptr);
+        if (!anim->info_ptr)
                 abort_("[read_png_file] png_create_info_struct failed");
 
-        if (setjmp(png_jmpbuf(anim.png_ptr)))
+        if (setjmp(png_jmpbuf(anim->png_ptr)))
                 abort_("[read_png_file] Error during init_io");
 
-        png_init_io(anim.png_ptr, fp);
-        png_set_sig_bytes(anim.png_ptr, 8);
+        png_init_io(anim->png_ptr, fp);
+        png_set_sig_bytes(anim->png_ptr, 8);
 
-        png_read_info(anim.png_ptr, anim.info_ptr);
+        png_read_info(anim->png_ptr, anim->info_ptr);
 
-        anim.width = png_get_image_width(anim.png_ptr, anim.info_ptr);
-        anim.height = png_get_image_height(anim.png_ptr, anim.info_ptr);
-        anim.color_type = png_get_color_type(anim.png_ptr, anim.info_ptr);
-        anim.bit_depth = png_get_bit_depth(anim.png_ptr, anim.info_ptr);
+        anim->width = png_get_image_width(anim->png_ptr, anim->info_ptr);
+        anim->height = png_get_image_height(anim->png_ptr, anim->info_ptr);
+        anim->color_type = png_get_color_type(anim->png_ptr, anim->info_ptr);
+        anim->bit_depth = png_get_bit_depth(anim->png_ptr, anim->info_ptr);
 
-        anim.number_of_passes = png_set_interlace_handling(anim.png_ptr);
-        png_read_update_info(anim.png_ptr, anim.info_ptr);
+        anim->number_of_passes = png_set_interlace_handling(anim->png_ptr);
+        png_read_update_info(anim->png_ptr, anim->info_ptr);
 
 
         /* read file */
-        if (setjmp(png_jmpbuf(anim.png_ptr)))
+        if (setjmp(png_jmpbuf(anim->png_ptr)))
                 abort_("[read_png_file] Error during read_image");
 
-        anim.row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * anim.height);
-        for (y=0; y<anim.height; y++)
-                anim.row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(anim.png_ptr,anim.info_ptr));
+        anim->row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * anim->height);
+        for (y=0; y<anim->height; y++)
+                anim->row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(anim->png_ptr,anim->info_ptr));
 
-        png_read_image(anim.png_ptr, anim.row_pointers);
-        printf("Anim - Height: %d \tWidth: %d\n", anim.height, anim.width);
+        png_read_image(anim->png_ptr, anim->row_pointers);
+        printf("Anim - Height: %d \tWidth: %d\n", anim->height, anim->width);
         fclose(fp);
 }
 
@@ -513,18 +513,18 @@ int main(int argc, char **argv) {
 	clearLEDBuffer();
 
 
-	read_png_file(anims[0], "./anim/boom.png");
-read_png_file(anims[1], "./anim/hypnotoad.png");
-read_png_file(anims[2], "./anim/nyan.png");
-read_png_file(anims[3], "./anim/off.png");
-read_png_file(anims[4], "./anim/photon.png");
-read_png_file(anims[5], "./anim/rainbow.png");
-read_png_file(anims[6], "./anim/rainbowspin.png");
-read_png_file(anims[7], "./anim/redblue.png");
-read_png_file(anims[8], "./anim/smokering.png");
-read_png_file(anims[9], "./anim/stars.png");
-read_png_file(anims[10], "./anim/trip.png");
-read_png_file(anims[11], "./anim/umbrella.png");
+	read_png_file(&anims[0], "./anim/boom.png");
+read_png_file(&anims[1], "./anim/hypnotoad.png");
+read_png_file(&anims[2], "./anim/nyan.png");
+read_png_file(&anims[3], "./anim/off.png");
+read_png_file(&anims[4], "./anim/photon.png");
+read_png_file(&anims[5], "./anim/rainbow.png");
+read_png_file(&anims[6], "./anim/rainbowspin.png");
+read_png_file(&anims[7], "./anim/redblue.png");
+read_png_file(&anims[8], "./anim/smokering.png");
+read_png_file(&anims[9], "./anim/stars.png");
+read_png_file(&anims[10], "./anim/trip.png");
+read_png_file(&anims[11], "./anim/umbrella.png");
 
 		while(1) {
 			if (nfc_initiator_select_passive_target(pnd, nmMifare, NULL, 0, &nt) > 0) {
