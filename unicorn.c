@@ -531,10 +531,7 @@ read_png_file(anims[11], "anim/umbrella.png");
 			    printf("       UID (NFCID%c): ", (nt.nti.nai.abtUid[0] == 0x08 ? '3' : '1'));
 			    print_hex(nt.nti.nai.abtUid, nt.nti.nai.szUidLen);
 			   
-			    printf("       Card: ");
-			    print_hex(card, 7);
-			    printf("MemCMP: %d\n", memcmp(card, nt.nti.nai.abtUid, nt.nti.nai.szUidLen));
-
+			    
 			    for (i = 0; i < sizeof(tokens); i++) {
 			    	printf("       Card: ");
 			    	print_hex(tokens[i].id, tokens[i].id_len);
@@ -544,7 +541,7 @@ read_png_file(anims[11], "anim/umbrella.png");
 			   		} else {
 			   			min_len = nt.nti.nai.szUidLen;
 			   		}
-			   		printf("        - MemCMP: %d\n", memcmp(tokens[i].id_len, nt.nti.nai.abtUid, min_len));
+			   		printf("        - MemCMP: %d\n", memcmp(tokens[i].id, nt.nti.nai.abtUid, min_len));
 			   		
 			    	if (memcmp(tokens[i].id, nt.nti.nai.abtUid, min_len) == 0 ) {
 			    		process_file(anims[tokens[i].anim_num]);
