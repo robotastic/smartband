@@ -209,6 +209,7 @@ void process_file(png_anim_t anim)
 {
 	int currentFrame;
 
+	printf("Anim - Height: %d \tWidth: %d\n", anim.height, anim.width);
 	for (currentFrame=0; currentFrame<(anim.height/8); currentFrame++){
         for (y=0; y<8; y++) {
                 png_byte* row = anim.row_pointers[y + (8*currentFrame)];
