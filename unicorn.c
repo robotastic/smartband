@@ -54,7 +54,20 @@ ws2811_t ledstring =
 		}
 	}
 };
+typedef struct
+{
+	char file_name[75];
+	int width, height;
+	png_byte color_type;
+	png_byte bit_depth;
 
+	png_structp png_ptr;
+	png_infop info_ptr;
+	int number_of_passes;
+	png_bytep * row_pointers;
+} png_anim_t;
+
+  png_anim_t anims[12];
   nfc_device *pnd;
   nfc_target nt;
 
@@ -126,20 +139,14 @@ void abort_(const char * s, ...)
 
 int x, y;
 
-int width, height;
-png_byte color_type;
-png_byte bit_depth;
 
-png_structp png_ptr;
-png_infop info_ptr;
-int number_of_passes;
-png_bytep * row_pointers;
 int anim_delay = 50;
 
-void read_png_file(char* file_name)
+void read_png_file(png_anim_t *anim, char* file_name)
 {
         char header[8];    // 8 is the maximum size that can be checked
 
+        strcpy(anim->file_name, file_name);
         /* open file and test for it being a png */
         FILE *fp = fopen(file_name, "rb");
         if (!fp)
@@ -150,41 +157,41 @@ void read_png_file(char* file_name)
 
 
         /* initialize stuff */
-        png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+        anim->png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
-        if (!png_ptr)
+        if (!anim->png_ptr)
                 abort_("[read_png_file] png_create_read_struct failed");
 
-        info_ptr = png_create_info_struct(png_ptr);
-        if (!info_ptr)
+        anim->info_ptr = png_create_info_struct(anim->png_ptr);
+        if (!anim->info_ptr)
                 abort_("[read_png_file] png_create_info_struct failed");
 
-        if (setjmp(png_jmpbuf(png_ptr)))
+        if (setjmp(png_jmpbuf(anim->png_ptr)))
                 abort_("[read_png_file] Error during init_io");
 
-        png_init_io(png_ptr, fp);
-        png_set_sig_bytes(png_ptr, 8);
+        png_init_io(anim->png_ptr, fp);
+        png_set_sig_bytes(anim->png_ptr, 8);
 
-        png_read_info(png_ptr, info_ptr);
+        png_read_info(anim->png_ptr, anim->info_ptr);
 
-        width = png_get_image_width(png_ptr, info_ptr);
-        height = png_get_image_height(png_ptr, info_ptr);
-        color_type = png_get_color_type(png_ptr, info_ptr);
-        bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+        anim->width = png_get_image_width(anim->png_ptr, anim->info_ptr);
+        anim->height = png_get_image_height(anim->png_ptr, anim->info_ptr);
+        anim->color_type = png_get_color_type(anim->png_ptr, anim->info_ptr);
+        anim->bit_depth = png_get_bit_depth(anim->png_ptr, anim->info_ptr);
 
-        number_of_passes = png_set_interlace_handling(png_ptr);
-        png_read_update_info(png_ptr, info_ptr);
+        anim->number_of_passes = png_set_interlace_handling(anim->png_ptr);
+        png_read_update_info(anim->png_ptr, anim->info_ptr);
 
 
         /* read file */
-        if (setjmp(png_jmpbuf(png_ptr)))
+        if (setjmp(png_jmpbuf(anim->png_ptr)))
                 abort_("[read_png_file] Error during read_image");
 
-        row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
-        for (y=0; y<height; y++)
-                row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+        anim->row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * anim->height);
+        for (y=0; y<anim->height; y++)
+                anim->row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(anim->png_ptr,anim->info_ptr));
 
-        png_read_image(png_ptr, row_pointers);
+        png_read_image(anim->png_ptr, anim->row_pointers);
 
         fclose(fp);
 }
@@ -193,9 +200,9 @@ void process_file(void)
 {
 	int currentFrame;
 
-	for (currentFrame=0; currentFrame<(height/8); currentFrame++){
+	for (currentFrame=0; currentFrame<(anim->height/8); currentFrame++){
         for (y=0; y<8; y++) {
-                png_byte* row = row_pointers[y + (8*currentFrame)];
+                png_byte* row = anim->row_pointers[y + (8*currentFrame)];
                 for (x=0; x<width; x++) {
                         png_byte* ptr = &(row[x*3]);
 
@@ -430,16 +437,16 @@ void unicorn_exit(int status){
 int main(int argc, char **argv) {
 	int shader = 0;
 
-	if (argc >= 3){
-		if(sscanf (argv[2], "%i", &anim_delay)!=1){
+	if (argc >= 2){
+		if(sscanf (argv[1], "%i", &anim_delay)!=1){
 			printf ("Error, delay must be an integer \n");
 			return 0;
 		}
 	}
 
 	int newbrightness = 0;
-	if (argc >= 4){
-		if(sscanf (argv[3], "%i", &newbrightness)!=1){
+	if (argc >= 3){
+		if(sscanf (argv[2], "%i", &newbrightness)!=1){
 			printf ("Error, brightness must be an integer \n");
 			return 0;
 
@@ -447,12 +454,7 @@ int main(int argc, char **argv) {
 			setBrightness(newbrightness/100.0);
 		}
 	}
- 	if (argc == 2){
-		if(sscanf (argv[1], "%i", &newbrightness)==1){
-			setBrightness(newbrightness/100.0);
-			shader = 1;
-		}
-	}
+ 
 
 	int i;
 	for (i = 0; i < 64; i++) {
@@ -477,11 +479,19 @@ int main(int argc, char **argv) {
 
 	clearLEDBuffer();
 
-	if(argc < 2){
-		shader = 1;
-	}
 
-	if(shader){
+	read_png_file(anims[0], "anim/boom.png");
+read_png_file(anims[1], "anim/hypnotoad.png");
+read_png_file(anims[2], "anim/nyan.png");
+read_png_file(anims[3], "anim/off.png");
+read_png_file(anims[4], "anim/photon.png");
+read_png_file(anims[5], "anim/rainbow.png");
+read_png_file(anims[6], "anim/rainbowspin.png");
+read_png_file(anims[7], "anim/redblue.png");
+read_png_file(anims[8], "anim/smokering.png");
+read_png_file(anims[9], "anim/stars.png");
+read_png_file(anims[10], "anim/trip.png");
+read_png_file(anims[11], "anim/umbrella.png");
 		int i;
 		while(1) {
 			if (nfc_initiator_select_passive_target(pnd, nmMifare, NULL, 0, &nt) > 0) {
@@ -506,18 +516,7 @@ int main(int argc, char **argv) {
 
 
 		}
-	}else{
-
-		read_png_file(argv[1]);
-		while(1){
-			process_file();
-			if (height/8 == 1){
-				break;
-			}
-		}
-	
-	}
-	  // Close NFC device
+		  // Close NFC device
 	  nfc_close(pnd);
 	  // Release the context
 	  nfc_exit(context);
