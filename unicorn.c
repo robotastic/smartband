@@ -547,8 +547,8 @@ read_png_file(anims[11], "anim/umbrella.png");
 			   		printf("        - MemCMP: %d\n", memcmp(tokens[i].id_len, nt.nti.nai.abtUid, min_len));
 			   		
 			    	if (memcmp(tokens[i].id, nt.nti.nai.abtUid, min_len) == 0 ) {
-			    		process_file(tokens[i].anim);
-			    		process_file(tokens[i].anim);
+			    		process_file(tokens[i].anim_num);
+			    		process_file(tokens[i].anim_num);
 			    	}
 			    }
 
