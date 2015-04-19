@@ -443,15 +443,20 @@ void unicorn_exit(int status){
 	exit(status);
 }
 
+void set_token(token_t * token, int anim_num, unsigned char * token_id){
+	token->id_len = sizeof(token_id);
+	token->id = malloc(token->id_len * sizeof(unsigned char));
+	memcpy(token->id, token_id,  token->id_len * sizeof(unsigned char));
+	token->anim_num = anim_num;
+}
+
 int main(int argc, char **argv) {
 	int shader = 0;
 	int i;
 
 	const unsigned char card[] = { 0x04, 0x76, 0x28,  0xca,  0xe9,  0x34,  0x80 };
-	tokens[0].id = malloc(7 * sizeof(unsigned char));
-	tokens[0].id_len = 7;
-	memcpy(tokens[0].id,card,7 * sizeof(unsigned char));
-	printf("Card Size: %d\n",sizeof(card));
+	set_token(&tokens[0], 0, { 0x04, 0x76, 0x28,  0xca,  0xe9,  0x34,  0x80 });
+
 	//tokens[0].id[] = { 0x04, 0x76, 0x28,  0xca,  0xe9,  0x34,  0x80 };
 /*04  84  62  fa  6b  3a  80
 04  80  56  0a  12  35  80
