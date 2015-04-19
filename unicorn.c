@@ -201,7 +201,7 @@ void read_png_file(png_anim_t anim, char* file_name)
                 anim.row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(anim.png_ptr,anim.info_ptr));
 
         png_read_image(anim.png_ptr, anim.row_pointers);
-
+        printf("Anim - Height: %d \tWidth: %d\n", anim.height, anim.width);
         fclose(fp);
 }
 
@@ -513,18 +513,18 @@ int main(int argc, char **argv) {
 	clearLEDBuffer();
 
 
-	read_png_file(anims[0], "anim/boom.png");
-read_png_file(anims[1], "anim/hypnotoad.png");
-read_png_file(anims[2], "anim/nyan.png");
-read_png_file(anims[3], "anim/off.png");
-read_png_file(anims[4], "anim/photon.png");
-read_png_file(anims[5], "anim/rainbow.png");
-read_png_file(anims[6], "anim/rainbowspin.png");
-read_png_file(anims[7], "anim/redblue.png");
-read_png_file(anims[8], "anim/smokering.png");
-read_png_file(anims[9], "anim/stars.png");
-read_png_file(anims[10], "anim/trip.png");
-read_png_file(anims[11], "anim/umbrella.png");
+	read_png_file(anims[0], "./anim/boom.png");
+read_png_file(anims[1], "./anim/hypnotoad.png");
+read_png_file(anims[2], "./anim/nyan.png");
+read_png_file(anims[3], "./anim/off.png");
+read_png_file(anims[4], "./anim/photon.png");
+read_png_file(anims[5], "./anim/rainbow.png");
+read_png_file(anims[6], "./anim/rainbowspin.png");
+read_png_file(anims[7], "./anim/redblue.png");
+read_png_file(anims[8], "./anim/smokering.png");
+read_png_file(anims[9], "./anim/stars.png");
+read_png_file(anims[10], "./anim/trip.png");
+read_png_file(anims[11], "./anim/umbrella.png");
 
 		while(1) {
 			if (nfc_initiator_select_passive_target(pnd, nmMifare, NULL, 0, &nt) > 0) {
