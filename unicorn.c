@@ -443,7 +443,7 @@ void unicorn_exit(int status){
 	exit(status);
 }
 
-void set_token(token_t * token, int anim_num, const unsigned char * token_id){
+void set_token(token_t * token, int anim_num, const unsigned char token_id[]){
 	token->id_len = sizeof(token_id);
 	token->id = malloc(token->id_len * sizeof(unsigned char));
 	memcpy(token->id, token_id,  token->id_len * sizeof(unsigned char));
