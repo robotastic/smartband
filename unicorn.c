@@ -67,6 +67,15 @@ typedef struct
 	png_bytep * row_pointers;
 } png_anim_t;
 
+typedef struct 
+{
+	unsigned char *id;
+	int id_len;
+	int anim_num;	
+} token_t;
+
+
+	token_t tokens[6];
   png_anim_t anims[12];
   nfc_device *pnd;
   nfc_target nt;
@@ -439,6 +448,16 @@ int main(int argc, char **argv) {
 	int i;
 
 	const unsigned char card[] = { 0x04, 0x76, 0x28,  0xca,  0xe9,  0x34,  0x80 };
+	tokens[0].id = malloc(7 * sizeof(unsigned char));
+	tokens[0].id_len = 7;
+	tokens[0].id[] = { 0x04, 0x76, 0x28,  0xca,  0xe9,  0x34,  0x80 };
+/*04  84  62  fa  6b  3a  80
+04  80  56  0a  12  35  80
+04  3d  6f  9a  52  38  80
+a7  08  3c  f2
+93  34  c6  2c*/
+
+
 	if (argc >= 2){
 		if(sscanf (argv[1], "%i", &anim_delay)!=1){
 			printf ("Error, delay must be an integer \n");
