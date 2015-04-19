@@ -455,18 +455,18 @@ int main(int argc, char **argv) {
 	int i;
 
 	const unsigned char card[] = { 0x04, 0x76, 0x28,  0xca,  0xe9,  0x34,  0x80 };
+	const unsigned char smartband1[] = { 0x04,  0x84,  0x62,  0xfa,  0x6b,  0x3a,  0x80};
+	const unsigned char smartband2[] = { 0x04 , 0x80,  0x56,  0x0a,  0x12,  0x35,  0x80};
+	const unsigned char smartband3[] = { 0x04,  0x3d,  0x6f,  0x9a,  0x52,  0x38,  0x80 };
+	const unsigned char card2[] = { 0xa7,  0x08,  0x3c,  0xf2 };
+	const unsigned char card3[] = { 0x93,  0x34,  0xc6,  0x2c };
 	set_token(&tokens[0], 0, card);
-	set_token(&tokens[1], 1, { 0x04,  0x84,  0x62,  0xfa,  0x6b,  0x3a,  0x80});
-	set_token(&tokens[2], 2, { 0x04 , 0x80,  0x56,  0x0a,  0x12,  0x35,  0x80});
-	set_token(&tokens[3], 4, { 0x04,  0x3d,  0x6f,  0x9a,  0x52,  0x38,  0x80 });
-	set_token(&tokens[4], 5, { 0xa7,  0x08,  0x3c,  0xf2 });
-	set_token(&tokens[5], 6, { 0x93,  0x34,  0xc6,  0x2c });
-	//tokens[0].id[] = { 0x04, 0x76, 0x28,  0xca,  0xe9,  0x34,  0x80 };
-/*04  84  62  fa  6b  3a  80
-04  80  56  0a  12  35  80
-04  3d  6f  9a  52  38  80
-a7  08  3c  f2
-93  34  c6  2c*/
+	set_token(&tokens[1], 1, smartband1);
+	set_token(&tokens[2], 2, smartband2);
+	set_token(&tokens[3], 4, smartband3);
+	set_token(&tokens[4], 5, card2);
+	set_token(&tokens[5], 6, card3);
+
 
 
 	if (argc >= 2){
@@ -528,20 +528,31 @@ read_png_file(anims[11], "anim/umbrella.png");
 		while(1) {
 			if (nfc_initiator_select_passive_target(pnd, nmMifare, NULL, 0, &nt) > 0) {
 			    printf("The following (NFC) ISO14443A tag was found:\n");
-			    printf("    ATQA (SENS_RES): ");
-			    print_hex(nt.nti.nai.abtAtqa, 2);
 			    printf("       UID (NFCID%c): ", (nt.nti.nai.abtUid[0] == 0x08 ? '3' : '1'));
 			    print_hex(nt.nti.nai.abtUid, nt.nti.nai.szUidLen);
-			    printf("      SAK (SEL_RES): ");
-			    print_hex(&nt.nti.nai.btSak, 1);
-			    if (nt.nti.nai.szAtsLen) {
-			      printf("          ATS (ATR): ");
-			      print_hex(nt.nti.nai.abtAts, nt.nti.nai.szAtsLen);
-			    }
+			   
 			    printf("       Card: ");
 			    print_hex(card, 7);
 			    printf("MemCMP: %d\n", memcmp(card, nt.nti.nai.abtUid, nt.nti.nai.szUidLen));
-			    loop_shader(500);
+
+			    for (i = 0; i < sizeof(tokens); i++) {
+			    	printf("       Card: ");
+			    	print_hex(tokens[i].id, tokens[i].id_len);
+			   		int min_len = 0;
+			   		if (tokens[i].id_len < nt.nti.nai.szUidLen) {
+			   			min_len = tokens[i].id_len;
+			   		} else {
+			   			min_len = nt.nti.nai.szUidLen;
+			   		}
+			   		printf("        - MemCMP: %d\n", memcmp(tokens[i].id_len, nt.nti.nai.abtUid, min_len));
+			   		
+			    	if (memcmp(tokens[i].id, nt.nti.nai.abtUid, min_len) == 0 ) {
+			    		process_file(tokens[i].anim);
+			    		process_file(tokens[i].anim);
+			    	}
+			    }
+
+			    //loop_shader(500);
 
 				for (i = 0; i < 64; i++){
 					setPixelColorRGB(i,0,0,0);
