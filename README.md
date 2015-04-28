@@ -1,46 +1,6 @@
-Unicorn Hat C Example
-=====================
+Smartband Magic!
+================
 
-This simple C program will let you display PNG files on your Unicorn Hat, and even run frame-based animations with them.
+This code combines together the example programs for LibNFC and the Pimoroni Unicorn Hat. When you touch a band to the RFID reader, it will dispaly an animation on the LED Matrix. There is some information on it here: http://lukeberndt.com/2015/magicbands-rpi-leds-fun/ ‎
 
-Getting Started
----------------
-
-You'll need to install libpng:
-
-    sudo apt-get install libpng-dev
-
-Then make the binary:
-
-    make
-
-Then try displaying an animation:
-
-    sudo ./unicorn anim/rainbow.png
-
-You can change the animation speed by specifying a delay between frames:
-
-    sudo ./unicorn anim/rainbow.png 500
-
-And you can change the brightness by specifying a value between 0 and 100:
-
-    sudo ./unicorn anim/rainbow.png 500 1
-
-Demo Pattern
-------------
-
-By default, unicorn will display a swirly rainbow pattern demo.
-
-    sudo ./unicorn
-
-You can try different brightnesses by adding them on as a parameter from 0 to 100:
-
-    sudo ./unicorn 50
-
-Notes
------
-
-If you plan on writing your own C applications to control ws2812 LEDs then please pay special attention
-to how unicorn.c handles exit signals and terminates cleanly.
-
-You absolutely must call terminate() on the ws2812 library when exiting!
+When you tap an RFID/NFC band or card it will print out the ID number. You will have to update the ID numbers that are hard coded in the program. This happens around line 457 in smartband.c. The array of tokens (~line 78) also has to be set to number of RFID card and magic bands you want train.
