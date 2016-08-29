@@ -39,11 +39,12 @@
     .nbr = NBR_106,
   };
 
+
 ws2811_t ledstring =
 {
 	.freq = TARGET_FREQ,
 	.dmanum = DMA,
-	.channel = 
+	.channel =
 	{
 		[0] =
 		{
@@ -67,11 +68,11 @@ typedef struct
 	png_bytep * row_pointers;
 } png_anim_t;
 
-typedef struct 
+typedef struct
 {
 	unsigned char *id;
 	int id_len;
-	int anim_num;	
+	int anim_num;
 } token_t;
 
 
@@ -234,7 +235,7 @@ void h2rgb(float h, float *r, float *g, float *b){
 
 	// Wrap hue
 	if(h < 0.0 || h > 1.0){
-		h=fabsf(fmodf(h,1.0));	
+		h=fabsf(fmodf(h,1.0));
 	}
 
 	h *= 360.0;
@@ -277,12 +278,12 @@ void h2rgb(float h, float *r, float *g, float *b){
 			*g = p;
 			*b = q;
 			break;
-		
+
 	}
 
 }
 
-void makeRGB(float *r, float *g, float *b, 
+void makeRGB(float *r, float *g, float *b,
 		float f1, float f2, float f3,
 		float p1, float p2, float p3,
 		float c, float w, float pos){
@@ -300,7 +301,7 @@ void transformPixel(float *x, float *y, float angle){
 
 	cs = cos(angle);
 	sn = sin(angle);
-	
+
 	px = *x * cs - *y * sn;
 	py = *x * sn + *y * cs;
 
@@ -318,7 +319,7 @@ void shadePixel(double t, int pixel, float x, float y){
 	angle /= 57.2957795;
 
 	float px, py, cs, sn;
-	
+
 	// Move origin to center
 	x-=0.5;
 	y-=0.5;
@@ -401,7 +402,7 @@ void init_nfc() {
 
   // Display libnfc version
   const char *acLibnfcVersion = nfc_version();
-  
+
   printf(" uses libnfc %s\n",  acLibnfcVersion);
 
   // Open, using the first available NFC device which can be in order of selection:
@@ -435,7 +436,7 @@ void unicorn_exit(int status){
 	}
 	ws2811_render(&ledstring);
 	ws2811_fini(&ledstring);
-	
+
 		  // Close NFC device
 	  nfc_close(pnd);
 	  // Release the context
@@ -480,7 +481,7 @@ int main(int argc, char **argv) {
 			setBrightness(newbrightness/100.0);
 		}
 	}
- 
+
 
 
 	for (i = 0; i < 64; i++) {
@@ -501,7 +502,7 @@ int main(int argc, char **argv) {
 	if(ws2811_init(&ledstring))
 	{
 		return -1;
-	}	
+	}
 
 	clearLEDBuffer();
 
@@ -524,8 +525,8 @@ read_png_file(&anims[11], "./anim/umbrella.png");
 			    printf("The following (NFC) ISO14443A tag was found:\n");
 			    printf("       UID (NFCID%c): ", (nt.nti.nai.abtUid[0] == 0x08 ? '3' : '1'));
 			    print_hex(nt.nti.nai.abtUid, nt.nti.nai.szUidLen);
-			   
-			    
+
+
 			    for (i = 0; i < 6; i++) {
 			    	//printf("       Card: ");
 			    	print_hex(tokens[i].id, tokens[i].id_len);
@@ -536,7 +537,7 @@ read_png_file(&anims[11], "./anim/umbrella.png");
 			   			min_len = nt.nti.nai.szUidLen;
 			   		}
 			   		//printf("        - MemCMP: %d\n", memcmp(tokens[i].id, nt.nti.nai.abtUid, min_len));
-			   		
+
 			    	if (memcmp(tokens[i].id, nt.nti.nai.abtUid, min_len) == 0 ) {
 			    		printf("        - Match Found!\n");
 			    		process_file(anims[tokens[i].anim_num]);
