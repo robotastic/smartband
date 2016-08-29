@@ -494,11 +494,11 @@ int main(int argc, char **argv) {
 	setvbuf(stdout, NULL, _IONBF, 0);
 
 	init_nfc();
-
+/*
 	if (board_info_init() < 0)
 	{
 		return -1;
-	}
+	}*/
 	if(ws2811_init(&ledstring))
 	{
 		return -1;
