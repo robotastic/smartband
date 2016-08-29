@@ -541,6 +541,7 @@ read_png_file(&anims[11], "./anim/umbrella.png");
 			    		printf("        - Match Found!\n");
 			    		process_file(anims[tokens[i].anim_num]);
 			    		process_file(anims[tokens[i].anim_num]);
+			    		break;
 			    	}
 			    }
 

@@ -121,6 +121,6 @@ typedef struct
 #define PAGE_OFFSET(page)                        (page & (PAGE_SIZE - 1))
 
 
-uint32_t dmanum_to_phys(int dmanum);
+uint32_t dmanum_to_offset(int dmanum);
 
 #endif /* __DMA_H__ */

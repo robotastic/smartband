@@ -30,7 +30,6 @@
 #ifndef __PWM_H__
 #define __PWM_H__
 
-#include <stdint.h>
 
 /*
  *
@@ -110,7 +109,7 @@ typedef struct
     int altnum;
 } pwm_pin_table_t;
 
-typedef struct 
+typedef struct
 {
     const int count;
     const pwm_pin_table_t *pins;
