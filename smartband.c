@@ -77,7 +77,7 @@ typedef struct
 
 
 int num_tokens = 3;
-token_t tokens[num_tokens];
+token_t tokens[3];
 png_anim_t anims[12];
 nfc_device *pnd;
 nfc_target nt;
