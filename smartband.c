@@ -532,8 +532,8 @@ int main(int argc, char **argv) {
                         print_hex(nt.nti.nai.abtUid, nt.nti.nai.szUidLen);
 
                         int r = rand();
-                        process_file(anims[tokens[r%11].anim_num]);
-                        process_file(anims[tokens[r%11].anim_num]);
+                        process_file(anims[r%11]);
+                        process_file(anims[r%11]);
                         /*
                         for (i = 0; i < num_tokens; i++) {
                                 //printf("       Card: ");
